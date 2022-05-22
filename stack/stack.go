@@ -11,7 +11,7 @@ import (
 type Stack[T any] struct {
 	content []T
 	maxSize int
-	mutex   sync.RWMutex
+	mutex   sync.Mutex
 }
 
 type UnderflowError struct{}
@@ -39,6 +39,9 @@ func New[T any](maxSize int) *Stack[T] {
 // An overflow error is returned in case the stack is
 // limited in its size and the push would overflow the stack.
 func (p *Stack[T]) Push(args ...T) error {
+	p.mutex.Lock()
+	defer p.mutex.Unlock()
+
 	stack := *p
 
 	if stack.maxSize > 0 && len(stack.content) >= stack.maxSize {
@@ -82,6 +85,9 @@ func (p *Stack[T]) String() string {
 // Pop pops the last element of the stack and returns it to the caller.
 // If the stack is empty an 'Underflow error' is returned.
 func (p *Stack[T]) Pop() (T, error) {
+	p.mutex.Lock()
+	defer p.mutex.Unlock()
+
 	stack := *p
 
 	if len(stack.content) <= 0 {
@@ -101,6 +107,9 @@ func (p *Stack[T]) Pop() (T, error) {
 // An underflow error is returned in case the stack is
 // already empty.
 func (p *Stack[T]) Drop() error {
+	p.mutex.Lock()
+	defer p.mutex.Unlock()
+
 	stack := *p
 
 	if len(stack.content) <= 0 {
