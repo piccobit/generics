@@ -5,21 +5,17 @@ import (
 	"strings"
 )
 
-type Stackable interface {
-	any
-}
+type Stack[T any] []T
 
-type Stack[T Stackable] []T
-
-func New[T Stackable]() *Stack[T] {
+func New[T any]() *Stack[T] {
 	stack := make(Stack[T], 0)
 
 	return &stack
 }
 
-func (p *Stack[T]) Push(argn ...T) {
+func (p *Stack[T]) Push(args ...T) {
 	stack := *p
-	stack = append(stack, argn...)
+	stack = append(stack, args...)
 	*p = stack
 }
 
