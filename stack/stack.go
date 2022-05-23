@@ -1,5 +1,7 @@
-// Package stack is a simple implementation of a LIFO ('Last In, First Out') stack, that means
-// the last input value is the one which will be retrieved first.
+/*
+Package stack is a simple generic implementation of a LIFO ('Last In, First Out') stack, that means
+the last input value is the one which will be retrieved first.
+*/
 package stack
 
 import (
