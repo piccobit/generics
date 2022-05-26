@@ -137,7 +137,7 @@ func ExampleStack_car() {
 	myCarStack := stack.New[car](0)
 
 	err = myCarStack.Push(car{
-		name:       "HD",
+		name:       "VW",
 		colour:     "blue",
 		horsepower: 60,
 	})
@@ -146,9 +146,9 @@ func ExampleStack_car() {
 	}
 
 	err = myCarStack.Push(car{
-		name:       "Doris",
+		name:       "Corvette",
 		colour:     "red",
-		horsepower: 59,
+		horsepower: 200,
 	})
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "ERROR: %s\n", err.Error())
@@ -180,11 +180,11 @@ func ExampleStack_car() {
 	fmt.Printf("Content: %v\n", myCarStack)
 	// Output:
 	// Length: 2
-	// Content: [{HD blue 60},{Doris red 59}]
-	// Pop: {Doris red 59}
-	// Content: [{HD blue 60}]
-	// Content: [{HD blue 60},{Doris red 59},{Doris red 59}]
-	// Content: [{HD blue 60},{Doris red 59}]
+	// Content: [{VW blue 60},{Corvette red 200}]
+	// Pop: {Corvette red 200}
+	// Content: [{VW blue 60}]
+	// Content: [{VW blue 60},{Corvette red 200},{Corvette red 200}]
+	// Content: [{VW blue 60},{Corvette red 200}]
 }
 
 func ExampleStack_underflow() {

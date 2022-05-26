@@ -27,7 +27,7 @@ func (ue *OverflowError) Error() string {
 	return "Overflow error"
 }
 
-// New provides the pointer to a new queue.
+// New returns the pointer to a new queue.
 // The 'maxSize' parameter allows to specify a
 // maximum size for the queue. Setting this to 0
 // allows the queue to grow infinitely.

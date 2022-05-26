@@ -27,7 +27,7 @@ func (ue *OverflowError) Error() string {
 	return "Overflow error"
 }
 
-// New provides the pointer to a new stack.
+// New returns the pointer to a new stack.
 // The 'maxSize' parameter allows to specify a
 // maximum size for the stack. Setting this to 0
 // allows the stack to grow infinitely.
