@@ -134,11 +134,6 @@ func (p *LRUCache[T]) AddByID(id string, arg T) error {
 // If the added item is already part of the LRU cache it will be moved to the
 // end of the cache.
 func (p *LRUCache[T]) Add(arg T) (string, error) {
-	p.mutex.Lock()
-	defer p.mutex.Unlock()
-
-	cache := *p
-
 	var id string
 
 	if idInterface, ok := any(arg).(IDInterface); ok {
@@ -147,23 +142,5 @@ func (p *LRUCache[T]) Add(arg T) (string, error) {
 		id = uuid.New().String()
 	}
 
-	if idx, ok := p.Contains(id); ok {
-		valueAtIndex := cache.content[idx]
-		before := cache.content[:idx]
-		after := cache.content[idx+1:]
-		newContent := append(before, after...)
-		cache.content = append(newContent, valueAtIndex)
-	} else {
-		if len(cache.content) < cache.maxSize {
-			cache.content = append(cache.content, item[T]{id, arg})
-		} else {
-			newContent := cache.content[1:]
-			newContent = append(newContent, item[T]{id, arg})
-			cache.content = newContent
-		}
-	}
-
-	*p = cache
-
-	return id, nil
+	return id, p.AddByID(id, arg)
 }
