@@ -201,3 +201,42 @@ func ExampleLRUCache_AddByID_car_2() {
 	// Output:
 	// Content: [{Little red 200},{Beetle blue 60}]
 }
+
+func ExampleLRUCache_Get_car() {
+	var err error
+
+	myCarLRU := lrucache.New[car](10)
+
+	err = myCarLRU.AddByID("VW", car{
+		name:       "Beetle",
+		colour:     "blue",
+		horsepower: 60,
+	})
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "ERROR: %s\\n", err.Error())
+	}
+
+	err = myCarLRU.AddByID("Corvette", car{
+		name:       "Little",
+		colour:     "red",
+		horsepower: 200,
+	})
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "ERROR: %s\\n", err.Error())
+	}
+
+	err = myCarLRU.AddByID("VW", car{
+		name:       "Beetle",
+		colour:     "blue",
+		horsepower: 60,
+	})
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "ERROR: %s\\n", err.Error())
+	}
+
+	value, _ := myCarLRU.Get("Corvette")
+
+	fmt.Printf("Content: %v", value)
+	// Output:
+	// Content: {Little red 200}
+}

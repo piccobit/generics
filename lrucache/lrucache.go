@@ -46,6 +46,21 @@ func New[T any](maxSize int) *LRUCache[T] {
 	return &cache
 }
 
+// Get returns the value stored by the provided ID.
+// If the ID doesn't exist 'false' is returned.
+func (p *LRUCache[T]) Get(id string) (T, bool) {
+	var idx int
+	var ok bool
+
+	if idx, ok = p.Contains(id); !ok {
+		var dummy T
+
+		return dummy, false
+	}
+
+	return p.content[idx].value, true
+}
+
 // Contains checks if the cache contains an element with
 // the provided ID.
 func (p *LRUCache[T]) Contains(id string) (int, bool) {
