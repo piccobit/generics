@@ -55,7 +55,7 @@ func (p *LRUCache[T]) Get(id string) (T, bool) {
 	var idx int
 	var ok bool
 
-	if idx, ok = p.Contains(id); !ok {
+	if idx, ok = p.contains(id); !ok {
 		var dummy T
 
 		return dummy, false
