@@ -19,7 +19,7 @@ type item[T any] struct {
 type LRUCache[T any] struct {
 	content []item[T]
 	maxSize int
-	mutex   sync.Mutex
+	mutex   sync.RWMutex
 }
 
 type UnderflowError struct{}
@@ -49,6 +49,9 @@ func New[T any](maxSize int) *LRUCache[T] {
 // Get returns the value stored by the provided ID.
 // If the ID doesn't exist 'false' is returned.
 func (p *LRUCache[T]) Get(id string) (T, bool) {
+	p.mutex.RLock()
+	defer p.mutex.RUnlock()
+
 	var idx int
 	var ok bool
 
@@ -64,6 +67,9 @@ func (p *LRUCache[T]) Get(id string) (T, bool) {
 // Contains checks if the cache contains an element with
 // the provided ID.
 func (p *LRUCache[T]) Contains(id string) (int, bool) {
+	p.mutex.RLock()
+	defer p.mutex.RUnlock()
+
 	for idx, i := range p.content {
 		if i.id == id {
 			return idx, true
@@ -75,6 +81,9 @@ func (p *LRUCache[T]) Contains(id string) (int, bool) {
 
 // String implements the Stringer interface.
 func (p *LRUCache[T]) String() string {
+	p.mutex.RLock()
+	defer p.mutex.RUnlock()
+
 	var str strings.Builder
 
 	str.WriteString("[")

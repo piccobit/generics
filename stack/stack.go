@@ -13,7 +13,7 @@ import (
 type Stack[T any] struct {
 	content []T
 	maxSize int
-	mutex   sync.Mutex
+	mutex   sync.RWMutex
 }
 
 type UnderflowError struct{}
@@ -64,6 +64,9 @@ func (p *Stack[T]) Push(args ...T) error {
 // String implements the Stringer interface to provide a
 // textual representation of the stack content.
 func (p *Stack[T]) String() string {
+	p.mutex.RLock()
+	defer p.mutex.RUnlock()
+
 	var str strings.Builder
 
 	str.WriteString("[")
@@ -126,6 +129,27 @@ func (p *Stack[T]) Drop() error {
 
 // Length returns the number of stack elements.
 func (p *Stack[T]) Length() int {
+	p.mutex.RLock()
+	defer p.mutex.RUnlock()
+
 	stack := *p
 	return len(stack.content)
+}
+
+// Peek gets the last element of the stack and returns it to the caller.
+// If the stack is empty an 'Underflow error' is returned.
+func (p *Stack[T]) Peek() (T, error) {
+	p.mutex.Lock()
+	defer p.mutex.Unlock()
+
+	stack := *p
+
+	if len(stack.content) <= 0 {
+		var ret T
+		return ret, &UnderflowError{}
+	}
+
+	value := stack.content[len(stack.content)-1]
+
+	return value, nil
 }

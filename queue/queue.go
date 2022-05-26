@@ -13,7 +13,7 @@ import (
 type Queue[T any] struct {
 	content []T
 	maxSize int
-	mutex   sync.Mutex
+	mutex   sync.RWMutex
 }
 
 type UnderflowError struct{}
@@ -64,6 +64,9 @@ func (p *Queue[T]) Push(args ...T) error {
 // String implements the Stringer interface to provide a
 // textual representation of the queue content.
 func (p *Queue[T]) String() string {
+	p.mutex.Lock()
+	defer p.mutex.Unlock()
+
 	var str strings.Builder
 
 	str.WriteString("[")
@@ -126,6 +129,27 @@ func (p *Queue[T]) Drop() error {
 
 // Length returns the number of queue elements.
 func (p *Queue[T]) Length() int {
+	p.mutex.Lock()
+	defer p.mutex.Unlock()
+
 	queue := *p
 	return len(queue.content)
+}
+
+// Peek gets the first element of the queue and returns it to the caller.
+// If the queue is empty an 'Underflow error' is returned.
+func (p *Queue[T]) Peek() (T, error) {
+	p.mutex.RLock()
+	defer p.mutex.RUnlock()
+
+	queue := *p
+
+	if len(queue.content) <= 0 {
+		var ret T
+		return ret, &UnderflowError{}
+	}
+
+	value := queue.content[0]
+
+	return value, nil
 }
