@@ -79,6 +79,20 @@ func (p *LRUCache[T]) Contains(id string) (int, bool) {
 	return -1, false
 }
 
+// contains checks if the cache contains an element with
+// the provided ID.
+// This function is only used internally and does not use
+// the mutex to lock during the read access.
+func (p *LRUCache[T]) contains(id string) (int, bool) {
+	for idx, i := range p.content {
+		if i.id == id {
+			return idx, true
+		}
+	}
+
+	return -1, false
+}
+
 // String implements the Stringer interface.
 func (p *LRUCache[T]) String() string {
 	p.mutex.RLock()
@@ -115,7 +129,7 @@ func (p *LRUCache[T]) AddByID(id string, arg T) error {
 
 	cache := *p
 
-	if idx, ok := p.Contains(id); ok {
+	if idx, ok := p.contains(id); ok {
 		valueAtIndex := cache.content[idx]
 		before := cache.content[:idx]
 		after := cache.content[idx+1:]
