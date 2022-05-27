@@ -44,19 +44,15 @@ func (p *Queue[T]) Push(args ...T) error {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
-	queue := *p
-
-	if queue.maxSize > 0 && len(queue.content) >= queue.maxSize {
+	if p.maxSize > 0 && len(p.content) >= p.maxSize {
 		return &OverflowError{}
 	}
 
-	if queue.maxSize > 0 && (len(queue.content)+len(args)) > queue.maxSize {
+	if p.maxSize > 0 && (len(p.content)+len(args)) > p.maxSize {
 		return &OverflowError{}
 	}
 
-	queue.content = append(queue.content, args...)
-
-	*p = queue
+	p.content = append(p.content, args...)
 
 	return nil
 }
@@ -71,9 +67,7 @@ func (p *Queue[T]) String() string {
 
 	str.WriteString("[")
 
-	queue := *p
-
-	for i, value := range queue.content {
+	for i, value := range p.content {
 		if i > 0 {
 			str.WriteString(",")
 
@@ -93,17 +87,14 @@ func (p *Queue[T]) Pop() (T, error) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
-	queue := *p
-
-	if len(queue.content) <= 0 {
+	if len(p.content) <= 0 {
 		var ret T
 		return ret, &UnderflowError{}
 	}
 
-	value := queue.content[0]
+	value := p.content[0]
 
-	queue.content = queue.content[1:]
-	*p = queue
+	p.content = p.content[1:]
 
 	return value, nil
 }
@@ -115,14 +106,11 @@ func (p *Queue[T]) Drop() error {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
-	queue := *p
-
-	if len(queue.content) <= 0 {
+	if len(p.content) <= 0 {
 		return &UnderflowError{}
 	}
 
-	queue.content = queue.content[1:]
-	*p = queue
+	p.content = p.content[1:]
 
 	return nil
 }
@@ -132,8 +120,7 @@ func (p *Queue[T]) Length() int {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
-	queue := *p
-	return len(queue.content)
+	return len(p.content)
 }
 
 // Peek gets the first element of the queue and returns it to the caller.
@@ -142,14 +129,12 @@ func (p *Queue[T]) Peek() (T, error) {
 	p.mutex.RLock()
 	defer p.mutex.RUnlock()
 
-	queue := *p
-
-	if len(queue.content) <= 0 {
+	if len(p.content) <= 0 {
 		var ret T
 		return ret, &UnderflowError{}
 	}
 
-	value := queue.content[0]
+	value := p.content[0]
 
 	return value, nil
 }

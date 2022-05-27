@@ -44,19 +44,15 @@ func (p *Stack[T]) Push(args ...T) error {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
-	stack := *p
-
-	if stack.maxSize > 0 && len(stack.content) >= stack.maxSize {
+	if p.maxSize > 0 && len(p.content) >= p.maxSize {
 		return &OverflowError{}
 	}
 
-	if stack.maxSize > 0 && (len(stack.content)+len(args)) > stack.maxSize {
+	if p.maxSize > 0 && (len(p.content)+len(args)) > p.maxSize {
 		return &OverflowError{}
 	}
 
-	stack.content = append(stack.content, args...)
-
-	*p = stack
+	p.content = append(p.content, args...)
 
 	return nil
 }
@@ -71,9 +67,7 @@ func (p *Stack[T]) String() string {
 
 	str.WriteString("[")
 
-	stack := *p
-
-	for i, value := range stack.content {
+	for i, value := range p.content {
 		if i > 0 {
 			str.WriteString(",")
 
@@ -93,17 +87,14 @@ func (p *Stack[T]) Pop() (T, error) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
-	stack := *p
-
-	if len(stack.content) <= 0 {
+	if len(p.content) <= 0 {
 		var ret T
 		return ret, &UnderflowError{}
 	}
 
-	value := stack.content[len(stack.content)-1]
+	value := p.content[len(p.content)-1]
 
-	stack.content = stack.content[:len(stack.content)-1]
-	*p = stack
+	p.content = p.content[:len(p.content)-1]
 
 	return value, nil
 }
@@ -115,14 +106,11 @@ func (p *Stack[T]) Drop() error {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
-	stack := *p
-
-	if len(stack.content) <= 0 {
+	if len(p.content) <= 0 {
 		return &UnderflowError{}
 	}
 
-	stack.content = stack.content[:len(stack.content)-1]
-	*p = stack
+	p.content = p.content[:len(p.content)-1]
 
 	return nil
 }
@@ -132,8 +120,7 @@ func (p *Stack[T]) Length() int {
 	p.mutex.RLock()
 	defer p.mutex.RUnlock()
 
-	stack := *p
-	return len(stack.content)
+	return len(p.content)
 }
 
 // Peek gets the last element of the stack and returns it to the caller.
@@ -142,14 +129,12 @@ func (p *Stack[T]) Peek() (T, error) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
-	stack := *p
-
-	if len(stack.content) <= 0 {
+	if len(p.content) <= 0 {
 		var ret T
 		return ret, &UnderflowError{}
 	}
 
-	value := stack.content[len(stack.content)-1]
+	value := p.content[len(p.content)-1]
 
 	return value, nil
 }

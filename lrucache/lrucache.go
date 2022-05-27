@@ -102,9 +102,7 @@ func (p *LRUCache[T]) String() string {
 
 	str.WriteString("[")
 
-	cache := *p
-
-	for i, cacheItem := range cache.content {
+	for i, cacheItem := range p.content {
 		if i > 0 {
 			str.WriteString(",")
 
@@ -127,25 +125,21 @@ func (p *LRUCache[T]) AddByID(id string, arg T) error {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 
-	cache := *p
-
 	if idx, ok := p.contains(id); ok {
-		valueAtIndex := cache.content[idx]
-		before := cache.content[:idx]
-		after := cache.content[idx+1:]
+		valueAtIndex := p.content[idx]
+		before := p.content[:idx]
+		after := p.content[idx+1:]
 		newContent := append(before, after...)
-		cache.content = append(newContent, valueAtIndex)
+		p.content = append(newContent, valueAtIndex)
 	} else {
-		if len(cache.content) < cache.maxSize {
-			cache.content = append(cache.content, item[T]{id, arg})
+		if len(p.content) < p.maxSize {
+			p.content = append(p.content, item[T]{id, arg})
 		} else {
-			newContent := cache.content[1:]
+			newContent := p.content[1:]
 			newContent = append(newContent, item[T]{id, arg})
-			cache.content = newContent
+			p.content = newContent
 		}
 	}
-
-	*p = cache
 
 	return nil
 }
