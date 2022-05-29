@@ -138,3 +138,9 @@ func (p *Queue[T]) Peek() (T, error) {
 
 	return value, nil
 }
+
+// GetQueue returns the queue content so that it can be
+// used in a 'for range' loop.
+func (p *Queue[T]) GetQueue() []T {
+	return p.content
+}

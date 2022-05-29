@@ -197,9 +197,12 @@ func ExampleLRUCache_AddByID_car_2() {
 		_, _ = fmt.Fprintf(os.Stderr, "ERROR: %s\\n", err.Error())
 	}
 
-	fmt.Printf("Content: %v", myCarLRU)
+	for k, v := range myCarLRU.GetCache() {
+		fmt.Printf("%s: %v\n", k, v)
+	}
 	// Output:
-	// Content: [{Little red 200},{Beetle blue 60}]
+	// Corvette: {Little red 200}
+	// VW: {Beetle blue 60}
 }
 
 func ExampleLRUCache_Get_car() {
@@ -234,9 +237,11 @@ func ExampleLRUCache_Get_car() {
 		_, _ = fmt.Fprintf(os.Stderr, "ERROR: %s\\n", err.Error())
 	}
 
-	value, _ := myCarLRU.Get("Corvette")
+	_, _ = myCarLRU.Get("Corvette")
 
-	fmt.Printf("Content: %v", value)
+	for k, v := range myCarLRU.GetCache() {
+		fmt.Printf("%s: %v\n", k, v)
+	}
 	// Output:
-	// Content: {Little red 200}
+	// Corvette: {Little red 200}
 }

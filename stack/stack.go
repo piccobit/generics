@@ -138,3 +138,9 @@ func (p *Stack[T]) Peek() (T, error) {
 
 	return value, nil
 }
+
+// GetStack returns the stack content so that it can be
+// used in a 'for range' loop.
+func (p *Stack[T]) GetStack() []T {
+	return p.content
+}

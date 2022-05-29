@@ -161,3 +161,14 @@ func (p *LRUCache[T]) Add(arg T) (string, error) {
 
 	return id, p.AddByID(id, arg)
 }
+
+// GetCache returns the cache content so that it can be
+// used in a 'for range' loop.
+func (p *LRUCache[T]) GetCache() map[string]T {
+	content := make(map[string]T)
+	for _, v := range p.content {
+		content[v.id] = v.value
+	}
+
+	return content
+}
