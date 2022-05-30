@@ -12,16 +12,15 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"golang.org/x/exp/constraints"
 )
 
-type item[T constraints.Ordered] struct {
+type item[T any] struct {
 	freq  int
 	added time.Time
 	value T
 }
 
-type LFUCache[T constraints.Ordered] struct {
+type LFUCache[T any] struct {
 	content       map[string]item[T]
 	maxSize       int
 	idDropItem    string
@@ -53,7 +52,7 @@ func (ue *DuplicateError) Error() string {
 // New returns the pointer to a new LFU cache.
 // The 'maxSize' parameter allows to specify a
 // maximum size for the stack.
-func New[T constraints.Ordered](maxSize int) *LFUCache[T] {
+func New[T any](maxSize int) *LFUCache[T] {
 	cache := LFUCache[T]{
 		content: make(map[string]item[T]),
 		maxSize: maxSize,

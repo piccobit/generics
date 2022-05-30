@@ -8,11 +8,9 @@ import (
 	"fmt"
 	"strings"
 	"sync"
-
-	"golang.org/x/exp/constraints"
 )
 
-type Queue[T constraints.Ordered] struct {
+type Queue[T any] struct {
 	content []T
 	maxSize int
 	mutex   sync.RWMutex
@@ -33,7 +31,7 @@ func (ue *OverflowError) Error() string {
 // The 'maxSize' parameter allows to specify a
 // maximum size for the queue. Setting this to 0
 // allows the queue to grow infinitely.
-func New[T constraints.Ordered](maxSize int) *Queue[T] {
+func New[T any](maxSize int) *Queue[T] {
 	queue := Queue[T]{maxSize: maxSize}
 
 	return &queue

@@ -8,11 +8,9 @@ import (
 	"fmt"
 	"strings"
 	"sync"
-
-	"golang.org/x/exp/constraints"
 )
 
-type Stack[T constraints.Ordered] struct {
+type Stack[T any] struct {
 	content []T
 	maxSize int
 	mutex   sync.RWMutex
@@ -33,7 +31,7 @@ func (ue *OverflowError) Error() string {
 // The 'maxSize' parameter allows to specify a
 // maximum size for the stack. Setting this to 0
 // allows the stack to grow infinitely.
-func New[T constraints.Ordered](maxSize int) *Stack[T] {
+func New[T any](maxSize int) *Stack[T] {
 	stack := Stack[T]{maxSize: maxSize}
 
 	return &stack
@@ -146,17 +144,3 @@ func (p *Stack[T]) Peek() (T, error) {
 func (p *Stack[T]) GetStack() []T {
 	return p.content
 }
-
-func Equal[T comparable](a, b T) bool {
-	return a == b
-}
-
-// func (p *Stack[T]) Contains(arg T) bool {
-// 	for _, v := range p.content {
-// 		if v == arg {
-// 			return true
-// 		}
-// 	}
-//
-// 	return false
-// }
