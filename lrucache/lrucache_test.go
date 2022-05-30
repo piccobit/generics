@@ -242,6 +242,7 @@ func ExampleLRUCache_Get_car() {
 	for k, v := range myCarLRU.GetCache() {
 		fmt.Printf("%s: %v\n", k, v)
 	}
-	// Output:
+	// Unordered output:
 	// Corvette: {Little red 200}
+	// VW: {Beetle blue 60}
 }
