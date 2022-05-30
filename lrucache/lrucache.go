@@ -9,14 +9,15 @@ import (
 	"sync"
 
 	"github.com/google/uuid"
+	"golang.org/x/exp/constraints"
 )
 
-type item[T any] struct {
+type item[T constraints.Ordered] struct {
 	id    string
 	value T
 }
 
-type LRUCache[T any] struct {
+type LRUCache[T constraints.Ordered] struct {
 	content []item[T]
 	maxSize int
 	mutex   sync.RWMutex
@@ -40,7 +41,7 @@ func (ue *OverflowError) Error() string {
 // New returns the pointer to a new LRU cache.
 // The 'maxSize' parameter allows to specify a
 // maximum size for the stack.
-func New[T any](maxSize int) *LRUCache[T] {
+func New[T constraints.Ordered](maxSize int) *LRUCache[T] {
 	cache := LRUCache[T]{maxSize: maxSize}
 
 	return &cache
