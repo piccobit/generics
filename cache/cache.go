@@ -1,3 +1,6 @@
+/*
+Package cache is a simple generic implementation of a cache.
+*/
 package cache
 
 import (
