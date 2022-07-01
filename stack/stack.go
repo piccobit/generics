@@ -19,11 +19,11 @@ type Stack[T any] struct {
 type UnderflowError struct{}
 type OverflowError struct{}
 
-func (ue *UnderflowError) Error() string {
+func (e *UnderflowError) Error() string {
 	return "Underflow error"
 }
 
-func (ue *OverflowError) Error() string {
+func (e *OverflowError) Error() string {
 	return "Overflow error"
 }
 

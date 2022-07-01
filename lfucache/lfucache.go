@@ -37,15 +37,15 @@ type IDInterface interface {
 	ID() string
 }
 
-func (ue *UnderflowError) Error() string {
+func (e *UnderflowError) Error() string {
 	return "Underflow error"
 }
 
-func (ue *OverflowError) Error() string {
+func (e *OverflowError) Error() string {
 	return "Overflow error"
 }
 
-func (ue *DuplicateError) Error() string {
+func (e *DuplicateError) Error() string {
 	return "Duplicate error"
 }
 
